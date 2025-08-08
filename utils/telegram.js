@@ -22,7 +22,7 @@ class TelegramNotifier {
   }
 
   formatSignalMessage(symbol, signalData, currentPrice) {
-    const { signals, trend, confidence } = signalData;
+    const { signals, trend } = signalData;
 
     if (signals.length === 0) return null;
 
@@ -41,7 +41,6 @@ class TelegramNotifier {
     message += `<b>Pair:</b> ${symbol}\n`;
     message += `<b>Price:</b> <code>${formattedPrice}</code>\n`; // Gunakan <code> untuk memudahkan copy
     message += `<b>Trend:</b> ${trend}\n`;
-    message += `<b>Confidence:</b> ${confidence}\n\n`;
 
     signals.forEach((signal, index) => {
       const emoji =

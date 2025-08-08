@@ -194,12 +194,12 @@ class TechnicalIndicators {
   static generateSignal(data) {
     const { price, bb, rsi, volume, emaShort, emaLong } = data;
     let signals = [];
-    let trend = "SIDEWAYS";
+    let trend = "SIDEWAYS ➡➡➡";
 
     // Validasi price
     if (typeof price !== "number" || isNaN(price) || !isFinite(price)) {
       console.warn("Invalid price data for signal generation");
-      return { signals: [], trend, confidence: "LOW" };
+      return { signals: [], trend };
     }
 
     // Trend Analysis
@@ -211,8 +211,8 @@ class TechnicalIndicators {
       isFinite(emaShort) &&
       isFinite(emaLong)
     ) {
-      if (emaShort > emaLong) trend = "UPTREND";
-      else if (emaShort < emaLong) trend = "DOWNTREND";
+      if (emaShort > emaLong) trend = "UPTREND ⬆⬆⬆";
+      else if (emaShort < emaLong) trend = "DOWNTREND ⬇⬇⬇";
     }
 
     // Bollinger Bands Signal
@@ -230,7 +230,7 @@ class TechnicalIndicators {
           signals.push({
             type: "BUY 🟩",
             reason: "Price touched Lower BB + RSI Oversold",
-            strength: "STRONG 🟢",
+            strength: "STRONG 🟢🟢",
           });
         } else {
           signals.push({
@@ -244,7 +244,7 @@ class TechnicalIndicators {
           signals.push({
             type: "SELL 🟥",
             reason: "Price touched Upper BB + RSI Overbought",
-            strength: "STRONG 🔴",
+            strength: "STRONG 🔴🔴",
           });
         } else {
           signals.push({
@@ -298,7 +298,6 @@ class TechnicalIndicators {
     return {
       signals,
       trend,
-      confidence: signals.length > 0 ? "HIGH" : "LOW",
     };
   }
 }
