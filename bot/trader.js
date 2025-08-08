@@ -11,12 +11,11 @@ class TraderBot {
     );
     this.lastSignals = new Map();
     this.errorCount = 0;
-    this.maxErrorCount = 5; // Batas error berturut-turut
+    this.maxErrorCount = 5;
   }
 
   async analyzeSymbol(symbol, klines) {
     try {
-      // Extract price and volume data dengan validasi
       if (!Array.isArray(klines) || klines.length === 0) {
         console.warn(`No kline data for ${symbol}`);
         return null;
@@ -39,7 +38,6 @@ class TraderBot {
             volume >= 0
         );
 
-      // Validasi data
       const requiredData = Math.max(
         this.config.indicators.bb.period,
         this.config.indicators.rsi.period,
@@ -53,7 +51,6 @@ class TraderBot {
         return null;
       }
 
-      // Calculate indicators dengan error handling
       let bb = null,
         rsi = null,
         volumeAnalysis = null,
@@ -125,7 +122,11 @@ class TraderBot {
         emaLong,
       });
 
-      return signalData;
+      // Return current price along with signal data
+      return {
+        signalData,
+        currentPrice,
+      };
     } catch (error) {
       console.error(`Error analyzing ${symbol}:`, error.message);
       return null;
@@ -142,7 +143,6 @@ class TraderBot {
         this.config.trading.timeframe
       );
 
-      // Cek apakah ada data yang berhasil diambil
       const successfulSymbols = Object.keys(klinesData).filter(
         (symbol) => klinesData[symbol]
       );
@@ -161,37 +161,45 @@ class TraderBot {
             this.maxErrorCount
           } consecutive attempts`;
           console.error(errorMessage);
-          // Kirim notifikasi error ke Telegram
           await this.telegram.sendMessage(errorMessage);
-          this.errorCount = 0; // Reset counter
+          this.errorCount = 0;
         }
         return;
       }
 
-      this.errorCount = 0; // Reset error counter jika berhasil
+      this.errorCount = 0;
 
       for (const [symbol, klines] of Object.entries(klinesData)) {
         if (!klines || klines.length === 0) continue;
 
-        const signalData = await this.analyzeSymbol(symbol, klines);
+        const result = await this.analyzeSymbol(symbol, klines);
 
-        if (signalData && signalData.signals.length > 0) {
+        if (
+          result &&
+          result.signalData &&
+          result.signalData.signals.length > 0
+        ) {
+          const { signalData, currentPrice } = result;
+
           const signalKey = `${symbol}_${JSON.stringify(
             signalData.signals.map((s) => s.type)
           )}`;
           const lastSignalTime = this.lastSignals.get(signalKey) || 0;
           const currentTime = Date.now();
 
-          // Only send signal if it's been more than 15 minutes since last similar signal
           if (currentTime - lastSignalTime > 15 * 60 * 1000) {
+            // Pass currentPrice to formatSignalMessage
             const message = this.telegram.formatSignalMessage(
               symbol,
-              signalData
+              signalData,
+              currentPrice
             );
             if (message) {
               await this.telegram.sendMessage(message);
               this.lastSignals.set(signalKey, currentTime);
-              console.log(`✅ Signal sent for ${symbol}`);
+              console.log(
+                `✅ Signal sent for ${symbol} at $${currentPrice.toFixed(2)}`
+              );
             }
           }
         }
@@ -200,7 +208,6 @@ class TraderBot {
       this.errorCount++;
       console.error("❌ Error checking signals:", error.message);
 
-      // Jika error berturut-turut, kirim notifikasi
       if (this.errorCount >= this.maxErrorCount) {
         const errorMessage = `[${new Date().toISOString()}] ⚠️ Critical: Multiple errors occurred while checking signals`;
         await this.telegram.sendMessage(errorMessage);
@@ -219,10 +226,8 @@ class TraderBot {
       `Interval: ${this.config.trading.interval / 1000 / 60} minutes`
     );
 
-    // Run immediately
     this.checkSignals();
 
-    // Schedule regular checks
     setInterval(() => {
       this.checkSignals();
     }, this.config.trading.interval);

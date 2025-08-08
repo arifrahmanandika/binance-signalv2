@@ -228,29 +228,29 @@ class TechnicalIndicators {
       if (price <= bb.lower) {
         if (rsi && rsi < 30) {
           signals.push({
-            type: "BUY",
+            type: "BUY 🟩",
             reason: "Price touched Lower BB + RSI Oversold",
-            strength: "STRONG",
+            strength: "STRONG 🟢",
           });
         } else {
           signals.push({
-            type: "BUY",
+            type: "BUY 🟩",
             reason: "Price touched Lower BB",
-            strength: "MEDIUM",
+            strength: "MEDIUM 🟡",
           });
         }
       } else if (price >= bb.upper) {
         if (rsi && rsi > 70) {
           signals.push({
-            type: "SELL",
+            type: "SELL 🟥",
             reason: "Price touched Upper BB + RSI Overbought",
-            strength: "STRONG",
+            strength: "STRONG 🔴",
           });
         } else {
           signals.push({
-            type: "SELL",
+            type: "SELL 🟥",
             reason: "Price touched Upper BB",
-            strength: "MEDIUM",
+            strength: "MEDIUM 🟠",
           });
         }
       }
@@ -260,15 +260,15 @@ class TechnicalIndicators {
     if (typeof rsi === "number" && !isNaN(rsi) && isFinite(rsi)) {
       if (rsi < 30 && (!bb || price > bb.lower)) {
         signals.push({
-          type: "BUY",
+          type: "BUY 🟩",
           reason: "RSI Oversold",
-          strength: "MEDIUM",
+          strength: "MEDIUM 🟡",
         });
       } else if (rsi > 70 && (!bb || price < bb.upper)) {
         signals.push({
-          type: "SELL",
+          type: "SELL 🟥",
           reason: "RSI Overbought",
-          strength: "MEDIUM",
+          strength: "MEDIUM 🟠",
         });
       }
     }
@@ -286,8 +286,8 @@ class TechnicalIndicators {
     ) {
       if (volume.isHigh) {
         signals.push({
-          type: "VOLUME_ALERT",
-          reason: `High Volume (${(volume.current / volume.average).toFixed(
+          type: "VOLUME_ALERT 📊",
+          reason: `📊 High Volume (${(volume.current / volume.average).toFixed(
             2
           )}x average)`,
           strength: "MEDIUM",
