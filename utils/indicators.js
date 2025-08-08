@@ -48,54 +48,51 @@ class TechnicalIndicators {
     }
   }
 
-  // RSI Calculation - Manual Only
+  // RSI Calculation - Improved Version
   static calculateRSI(prices, period = 14) {
     try {
-      // Validasi input
       if (!Array.isArray(prices) || prices.length < period + 1) {
-        console.warn(
-          "Invalid prices array or insufficient data for RSI calculation"
-        );
         return null;
       }
 
-      // Filter nilai yang valid
       const validPrices = prices.filter(
         (price) => typeof price === "number" && !isNaN(price) && isFinite(price)
       );
 
       if (validPrices.length < period + 1) {
-        console.warn("Insufficient valid price data for RSI calculation");
         return null;
       }
 
-      let gains = 0;
-      let losses = 0;
-
-      // Calculate initial gains and losses
-      for (let i = 1; i <= period; i++) {
-        const change = validPrices[i] - validPrices[i - 1];
-        if (change > 0) {
-          gains += change;
-        } else {
-          losses -= change;
-        }
+      // Calculate price changes
+      const changes = [];
+      for (let i = 1; i < validPrices.length; i++) {
+        changes.push(validPrices[i] - validPrices[i - 1]);
       }
 
-      let avgGain = gains / period;
-      let avgLoss = losses / period;
+      // Initialize gains and losses arrays
+      const gains = [];
+      const losses = [];
 
-      // Calculate RSI for the most recent price
-      const currentChange =
-        validPrices[validPrices.length - 1] -
-        validPrices[validPrices.length - 2];
-      const currentGain = currentChange > 0 ? currentChange : 0;
-      const currentLoss = currentChange < 0 ? -currentChange : 0;
+      for (let i = 0; i < changes.length; i++) {
+        gains.push(changes[i] > 0 ? changes[i] : 0);
+        losses.push(changes[i] < 0 ? Math.abs(changes[i]) : 0);
+      }
 
-      avgGain = (avgGain * (period - 1) + currentGain) / period;
-      avgLoss = (avgLoss * (period - 1) + currentLoss) / period;
+      // Calculate initial average gain and loss
+      let avgGain =
+        gains.slice(0, period).reduce((sum, gain) => sum + gain, 0) / period;
+      let avgLoss =
+        losses.slice(0, period).reduce((sum, loss) => sum + loss, 0) / period;
 
-      if (avgLoss === 0) return 100;
+      // Calculate RSI using Wilder's smoothing method
+      for (let i = period; i < gains.length; i++) {
+        avgGain = (avgGain * (period - 1) + gains[i]) / period;
+        avgLoss = (avgLoss * (period - 1) + losses[i]) / period;
+      }
+
+      if (avgLoss === 0) {
+        return 100;
+      }
 
       const rs = avgGain / avgLoss;
       const rsi = 100 - 100 / (1 + rs);
