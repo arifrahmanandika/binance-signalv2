@@ -229,7 +229,7 @@ class TechnicalIndicators {
         if (rsi && rsi < 30) {
           signals.push({
             type: "BUY 🟩",
-            reason: "Price touched Lower BB + RSI Oversold",
+            reason: `Price touched Lower BB + RSI Oversold (${rsi.toFixed(2)})`,
             strength: "STRONG 🟢🟢",
           });
         } else {
@@ -243,7 +243,9 @@ class TechnicalIndicators {
         if (rsi && rsi > 70) {
           signals.push({
             type: "SELL 🟥",
-            reason: "Price touched Upper BB + RSI Overbought",
+            reason: `Price touched Upper BB + RSI Overbought (${rsi.toFixed(
+              2
+            )})`,
             strength: "STRONG 🔴🔴",
           });
         } else {
@@ -261,13 +263,13 @@ class TechnicalIndicators {
       if (rsi < 30 && (!bb || price > bb.lower)) {
         signals.push({
           type: "BUY 🟩",
-          reason: "RSI Oversold",
+          reason: `RSI Oversold (${rsi.toFixed(2)})`,
           strength: "MEDIUM 🟡",
         });
       } else if (rsi > 70 && (!bb || price < bb.upper)) {
         signals.push({
           type: "SELL 🟥",
-          reason: "RSI Overbought",
+          reason: `RSI Overbought (${rsi.toFixed(2)})`,
           strength: "MEDIUM 🟠",
         });
       }
