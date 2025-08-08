@@ -39,13 +39,13 @@ class TelegramNotifier {
 
     let message = `<b>🚨 TRADING SIGNAL ALERT</b>\n\n`;
     message += `<b>Pair:</b> ${symbol}\n`;
-    message += `<b>Price:</b> <code>${formattedPrice}</code>\n`; // Gunakan <code> untuk memudahkan copy
+    message += `<b>Price:</b> <code>${formattedPrice}</code>\n`;
     message += `<b>Trend:</b> ${trend}\n`;
 
     signals.forEach((signal, index) => {
       const emoji =
-        signal.type === "BUY" ? "🟩" : signal.type === "SELL" ? "🟥" : "📊";
-      message += `${emoji} <b>Signal ${index + 1}:</b> ${signal.type}\n`;
+        signal.type === "BUY" ? "🟩⬆" : signal.type === "SELL" ? "🟥⬇" : "📊";
+      message += ` <b>Signal ${index + 1}:</b> ${signal.type} ${emoji}\n`;
       message += `   Reason: ${signal.reason}\n`;
       message += `   Strength: ${signal.strength}\n\n`;
     });

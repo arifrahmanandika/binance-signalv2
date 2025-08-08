@@ -208,8 +208,8 @@ class TechnicalIndicators {
       isFinite(emaShort) &&
       isFinite(emaLong)
     ) {
-      if (emaShort > emaLong) trend = "UPTREND ⬆⬆⬆";
-      else if (emaShort < emaLong) trend = "DOWNTREND ⬇⬇⬇";
+      if (emaShort > emaLong) trend = "UPTREND ↗↗↗";
+      else if (emaShort < emaLong) trend = "DOWNTREND ↘↘↘";
     }
 
     // Bollinger Bands Signal
@@ -225,13 +225,13 @@ class TechnicalIndicators {
       if (price <= bb.lower) {
         if (rsi && rsi < 30) {
           signals.push({
-            type: "BUY 🟩",
+            type: "BUY",
             reason: `Price touched Lower BB + RSI Oversold (${rsi.toFixed(2)})`,
             strength: "STRONG 🟢🟢",
           });
         } else {
           signals.push({
-            type: "BUY 🟩",
+            type: "BUY",
             reason: "Price touched Lower BB",
             strength: "MEDIUM 🟡",
           });
@@ -239,7 +239,7 @@ class TechnicalIndicators {
       } else if (price >= bb.upper) {
         if (rsi && rsi > 70) {
           signals.push({
-            type: "SELL 🟥",
+            type: "SELL",
             reason: `Price touched Upper BB + RSI Overbought (${rsi.toFixed(
               2
             )})`,
@@ -247,7 +247,7 @@ class TechnicalIndicators {
           });
         } else {
           signals.push({
-            type: "SELL 🟥",
+            type: "SELL",
             reason: "Price touched Upper BB",
             strength: "MEDIUM 🟠",
           });
@@ -259,13 +259,13 @@ class TechnicalIndicators {
     if (typeof rsi === "number" && !isNaN(rsi) && isFinite(rsi)) {
       if (rsi < 30 && (!bb || price > bb.lower)) {
         signals.push({
-          type: "BUY 🟩",
+          type: "BUY",
           reason: `RSI Oversold (${rsi.toFixed(2)})`,
           strength: "MEDIUM 🟡",
         });
       } else if (rsi > 70 && (!bb || price < bb.upper)) {
         signals.push({
-          type: "SELL 🟥",
+          type: "SELL",
           reason: `RSI Overbought (${rsi.toFixed(2)})`,
           strength: "MEDIUM 🟠",
         });
