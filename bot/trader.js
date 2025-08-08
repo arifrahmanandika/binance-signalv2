@@ -222,7 +222,9 @@ class TraderBot {
       `Monitoring symbols: ${this.config.trading.symbols.join(", ")}`
     );
     console.log(`Timeframe: ${this.config.trading.timeframe}`);
-    console.log(`Check Interval: ${this.config.trading.interval} minutes`);
+    console.log(
+      `Check Interval: ${this.config.trading.interval / 1000 / 60} minutes`
+    );
 
     this.checkSignals();
 
