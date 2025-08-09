@@ -227,7 +227,7 @@ class TechnicalIndicators {
         if (trend == "UPTREND") {
           signals.push({
             type: "BUY",
-            reason: `UPTREND ↗↗↗ + Lower BB + RSI Oversold (${rsi.toFixed(2)})`,
+            reason: `UPTREND ↗↗↗ + Lower BB + RSI (${rsi.toFixed(2)})`,
             strength: "STRONG 🟢🟢🟢",
           });
         } else {
@@ -241,15 +241,13 @@ class TechnicalIndicators {
         if (trend == "DOWNTREND") {
           signals.push({
             type: "SELL",
-            reason: `DOWNTREND ↘↘↘ + Upper BB + RSI Overbought (${rsi.toFixed(
-              2
-            )})`,
+            reason: `DOWNTREND ↘↘↘ + Upper BB + RSI (${rsi.toFixed(2)})`,
             strength: "STRONG 🔴🔴🔴",
           });
         } else {
           signals.push({
             type: "SELL",
-            reason: `Upper BB + RSI Overbought (${rsi.toFixed(2)})`,
+            reason: `Upper BB + RSI (${rsi.toFixed(2)})`,
             strength: "MEDIUM 🟠",
           });
         }
