@@ -134,7 +134,7 @@ class TraderBot {
   }
 
   async checkSignals() {
-    const timestamp = new Date().toISOString();
+    const timestamp = new Date().toLocaleString("id-ID");
     console.log(`[${timestamp}] Checking trading signals...`);
 
     try {
