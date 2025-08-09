@@ -189,7 +189,7 @@ class TechnicalIndicators {
 
   // Generate Trading Signal
   static generateSignal(data) {
-    const { price, bb, rsi, volume, emaShort, emaLong } = data;
+    const { price, bb, rsi, volume, emaShort, emaLong, ema } = data;
     let signals = [];
     let trend = "SIDEWAYS ➡➡➡";
     let volumeAlert = "Standard";
@@ -253,30 +253,42 @@ class TechnicalIndicators {
             strength: "MEDIUM 🟠",
           });
         }
+      } else if (price == ema && trend == "UPTREND") {
+        signals.push({
+          type: "BUY",
+          reason: `<b>EMA<b> in UPTREND ↗`,
+          strength: "WEAK 🟢",
+        });
+      } else if (price == ema && trend == "DOWNTREND") {
+        signals.push({
+          type: "SELL",
+          reason: `<b>EMA<b> in DOWNTREND ↘`,
+          strength: "WEAK 🔴",
+        });
       }
-    }
 
-    // Volume Confirmation
-    if (
-      volume &&
-      typeof volume.current === "number" &&
-      typeof volume.average === "number" &&
-      !isNaN(volume.current) &&
-      !isNaN(volume.average) &&
-      isFinite(volume.current) &&
-      isFinite(volume.average) &&
-      volume.average > 0
-    ) {
-      if (volume.isHigh) {
-        volumeAlert = "High Volume 🚀🚀";
+      // Volume Confirmation
+      if (
+        volume &&
+        typeof volume.current === "number" &&
+        typeof volume.average === "number" &&
+        !isNaN(volume.current) &&
+        !isNaN(volume.average) &&
+        isFinite(volume.current) &&
+        isFinite(volume.average) &&
+        volume.average > 0
+      ) {
+        if (volume.isHigh) {
+          volumeAlert = "High Volume 🚀🚀";
+        }
       }
-    }
 
-    return {
-      signals,
-      trend,
-      volumeAlert,
-    };
+      return {
+        signals,
+        trend,
+        volumeAlert,
+      };
+    }
   }
 }
 
