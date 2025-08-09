@@ -22,7 +22,7 @@ class TelegramNotifier {
   }
 
   formatSignalMessage(symbol, signalData, currentPrice) {
-    const { signals, trend } = signalData;
+    const { signals, trend, volumeAlert } = signalData;
 
     if (signals.length === 0) return null;
 
@@ -37,20 +37,23 @@ class TelegramNotifier {
       formattedPrice = currentPrice.toFixed(2);
     }
 
-    let message = `<b>🚨 TRADING SIGNAL ALERT</b>\n\n`;
+    const iconTrend =
+      trend === "UPTREND" ? "🔼↗" : trend === "DOWNTREND" ? "🔽↙" : "➡️";
+    let message = `<b>🚨 SIGNAL ALERT</b>\n\n`;
     message += `<b>Pair:</b> ${symbol}\n`;
     message += `<b>Price:</b> <code>${formattedPrice}</code>\n`;
-    message += `<b>Trend:</b> ${trend}\n`;
+    message += `<b>Trend:</b> ${trend}\n ${iconTrend}\n\n`;
 
     signals.forEach((signal, index) => {
       const emoji =
         signal.type === "BUY" ? "🟩⬆" : signal.type === "SELL" ? "🟥⬇" : "📊";
       message += ` <b>Signal ${index + 1}:</b> ${signal.type} ${emoji}\n`;
       message += `   Reason: ${signal.reason}\n`;
-      message += `   Strength: ${signal.strength}\n\n`;
+      message += `   Strength: ${signal.strength}\n`;
+      message += `   <b>Volume:</b> ${volumeAlert}\n\n`;
     });
 
-    message += `<i>Generated at ${new Date().toLocaleString("id-ID")}</i>`;
+    message += `<i>🕒 ${new Date().toLocaleString("id-ID")}</i>`;
 
     return message;
   }

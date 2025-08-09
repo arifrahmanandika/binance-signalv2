@@ -192,7 +192,6 @@ class TechnicalIndicators {
     const { price, bb, rsi, volume, emaShort, emaLong } = data;
     let signals = [];
     let trend = "SIDEWAYS ➡➡➡";
-    let volumeAlert = "Standard";
 
     // Validasi price
     if (typeof price !== "number" || isNaN(price) || !isFinite(price)) {
@@ -209,8 +208,8 @@ class TechnicalIndicators {
       isFinite(emaShort) &&
       isFinite(emaLong)
     ) {
-      if (emaShort > emaLong) trend = "UPTREND";
-      else if (emaShort < emaLong) trend = "DOWNTREND";
+      if (emaShort > emaLong) trend = "UPTREND ↗↗↗";
+      else if (emaShort < emaLong) trend = "DOWNTREND ↘↘↘";
     }
 
     // Bollinger Bands Signal
@@ -223,36 +222,51 @@ class TechnicalIndicators {
       isFinite(bb.lower) &&
       isFinite(bb.upper)
     ) {
-      if (price <= bb.lower && rsi && rsi < 30) {
-        if (trend == "UPTREND") {
-          signals.push({
-            type: "BUY",
-            reason: `UPTREND ↗↗↗ + Lower BB + RSI Oversold (${rsi.toFixed(2)})`,
-            strength: "STRONG 🟢🟢🟢",
-          });
-        } else {
+      if (price <= bb.lower) {
+        if (rsi && rsi < 30) {
           signals.push({
             type: "BUY",
             reason: `Lower BB + RSI Oversold (${rsi.toFixed(2)})`,
+            strength: "STRONG 🟢🟢",
+          });
+        } else {
+          signals.push({
+            type: "BUY",
+            reason: "Lower BB",
             strength: "MEDIUM 🟡",
           });
         }
-      } else if (price >= bb.upper && rsi && rsi > 70) {
-        if (trend == "DOWNTREND") {
+      } else if (price >= bb.upper) {
+        if (rsi && rsi > 70) {
           signals.push({
             type: "SELL",
-            reason: `DOWNTREND ↘↘↘ + Upper BB + RSI Overbought (${rsi.toFixed(
-              2
-            )})`,
-            strength: "STRONG 🔴🔴🔴",
+            reason: `Upper BB + RSI Overbought (${rsi.toFixed(2)})`,
+            strength: "STRONG 🔴🔴",
           });
         } else {
           signals.push({
             type: "SELL",
-            reason: `Upper BB + RSI Overbought (${rsi.toFixed(2)})`,
+            reason: "Upper BB",
             strength: "MEDIUM 🟠",
           });
         }
+      }
+    }
+
+    // RSI Confirmation
+    if (typeof rsi === "number" && !isNaN(rsi) && isFinite(rsi)) {
+      if (rsi < 30 && (!bb || price > bb.lower)) {
+        signals.push({
+          type: "BUY",
+          reason: `RSI Oversold (${rsi.toFixed(2)})`,
+          strength: "MEDIUM 🟡",
+        });
+      } else if (rsi > 70 && (!bb || price < bb.upper)) {
+        signals.push({
+          type: "SELL",
+          reason: `RSI Overbought (${rsi.toFixed(2)})`,
+          strength: "MEDIUM 🟠",
+        });
       }
     }
 
@@ -268,14 +282,19 @@ class TechnicalIndicators {
       volume.average > 0
     ) {
       if (volume.isHigh) {
-        volumeAlert = "High Volume 🚀🚀";
+        signals.push({
+          type: "VOLUME_ALERT 📊",
+          reason: `📊 High Volume (${(volume.current / volume.average).toFixed(
+            2
+          )}x average)`,
+          strength: "MEDIUM",
+        });
       }
     }
 
     return {
       signals,
       trend,
-      volumeAlert,
     };
   }
 }
