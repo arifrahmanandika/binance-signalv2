@@ -39,16 +39,14 @@ class TelegramNotifier {
 
     const iconTrend =
       trend === "UPTREND" ? "↗" : trend === "DOWNTREND" ? "↙" : "➡";
-    let message = `<b>🚨 SIGNAL ALERT</b>\n\n`;
-    message += `<b>Pair:</b> ${symbol}\n`;
-    message += `<b>Price:</b> <code>${formattedPrice}</code>\n`;
+    let message = `<b>${symbol}</b> <code>${formattedPrice}</code>\n`;
     message += `<b>Trend:</b> ${trend} ${iconTrend}\n\n`;
 
     signals.forEach((signal, index) => {
       const emoji =
         signal.type === "BUY" ? "🟩⬆" : signal.type === "SELL" ? "🟥⬇" : "📊";
       message += ` <b>Signal ${index + 1}:</b> ${signal.type} ${emoji}\n`;
-      message += `   Reason: ${signal.reason}\n`;
+      message += `   ${signal.reason}\n`;
       message += `   Strength: ${signal.strength}\n`;
       message += `   <b>Volume:</b> ${volumeAlert}\n\n`;
     });
