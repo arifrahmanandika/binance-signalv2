@@ -230,13 +230,14 @@ class TechnicalIndicators {
             reason: `UPTREND ↗↗↗ + Lower BB + RSI (${rsi.toFixed(2)})`,
             strength: "STRONG 🟢🟢🟢",
           });
-        } else {
-          signals.push({
-            type: "BUY",
-            reason: `Lower BB + RSI Oversold (${rsi.toFixed(2)})`,
-            strength: "MEDIUM 🟡",
-          });
         }
+        //  else {
+        //   signals.push({
+        //     type: "BUY",
+        //     reason: `Lower BB + RSI Oversold (${rsi.toFixed(2)})`,
+        //     strength: "MEDIUM 🟡",
+        //   });
+        // }
       } else if (price >= bb.upper && rsi && rsi > 70) {
         if (trend == "DOWNTREND") {
           signals.push({
@@ -244,26 +245,28 @@ class TechnicalIndicators {
             reason: `DOWNTREND ↘↘↘ + Upper BB + RSI (${rsi.toFixed(2)})`,
             strength: "STRONG 🔴🔴🔴",
           });
-        } else {
-          signals.push({
-            type: "SELL",
-            reason: `Upper BB + RSI (${rsi.toFixed(2)})`,
-            strength: "MEDIUM 🟠",
-          });
         }
-      } else if (price == ema && trend == "UPTREND") {
-        signals.push({
-          type: "BUY",
-          reason: `<b>EMA<b> in UPTREND ↗`,
-          strength: "WEAK 🟢",
-        });
-      } else if (price == ema && trend == "DOWNTREND") {
-        signals.push({
-          type: "SELL",
-          reason: `<b>EMA<b> in DOWNTREND ↘`,
-          strength: "WEAK 🔴",
-        });
+        // else {
+        //   signals.push({
+        //     type: "SELL",
+        //     reason: `Upper BB + RSI (${rsi.toFixed(2)})`,
+        //     strength: "MEDIUM 🟠",
+        //   });
+        // }
       }
+      // else if (price == ema && trend == "UPTREND") {
+      //   signals.push({
+      //     type: "BUY",
+      //     reason: `<b>EMA<b> in UPTREND ↗`,
+      //     strength: "WEAK 🟢",
+      //   });
+      // } else if (price == ema && trend == "DOWNTREND") {
+      //   signals.push({
+      //     type: "SELL",
+      //     reason: `<b>EMA<b> in DOWNTREND ↘`,
+      //     strength: "WEAK 🔴",
+      //   });
+      // }
 
       // Volume Confirmation
       if (
